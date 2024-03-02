@@ -65,17 +65,20 @@ def fetchGammaPressure(host, pumpindex):
 	if(repl[0] != "OK"):
 		print("Failed to read response from GammaQPC")
 		return False
-
-	if(repl[3] != 'TORR\r\r\n'):
-		print("Gamma QPC not set to TORR")
+	'''
+	if(repl[3] != 'TORR\r\r\n' or  repl[3] != 'MBAR\r\r\n' or repl[3] != 'Torr\r\r\n' or repl[3] != 'torr\r\r\n'):
+		print("Gamma SPC units not recognized")
 		print(repl[3])
 		return False
-
+	'''
 	pressure = float(repl[2])
 	return pressure
 
 if __name__ == "__main__":
   import sys
+
+  
+  ip_names = ["2DMOT", "TOWER", "3DMOT"] 
 
   if(len(sys.argv) < 3):
     print("Usage: "+sys.argv[0]+" HOSTNAME INDEX[1-4]")
@@ -99,7 +102,7 @@ if __name__ == "__main__":
         sys.exit()
 
       now = datetime.now()
-      print(now.strftime('%Y-%m-%d %H:%M:%S')+"  "+str(pressure)+" torr")
+      print(now.strftime('%Y-%m-%d %H:%M:%S')+"\t "+ str(index) + "\t" + ip_names[index-1] + "\t" + str(pressure)+" torr")
     except:
         print("Failed to query host "+host+" for pump "+str(index))
         traceback.print_exc()
